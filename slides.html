@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Malte Neuss">
+  <title>NixOS</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="./reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="./reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="./reveal.js/dist/theme/sky.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">NixOS</h1>
+  <p class="author">Malte Neuss</p>
+</section>
+
+<section id="nixos" class="slide level2">
+<h2>NixOS</h2>
+<blockquote>
+<p>“Reproducible builds and deployments.”</p>
+</blockquote>
+<p><img data-src="img/nix-logo.svg" style="width:40.0%" /></p>
+<p><small style="font-size: 9pt"> By Tim Cuthbertson CC BY 4.0, https://nixos.org </small></p>
+<aside class="notes">
+<p>used by Mozilla for Firefox, Target, Atlassian for Marketplace</p>
+</aside>
+</section>
+<section id="features" class="slide level2">
+<h2>Features</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Nix Package Manager</strong></p>
+<ul>
+<li>&gt;60k packages</li>
+<li>many ecosystems<br />
+Java, JS, Rust, Haskell…</li>
+<li>reproducible</li>
+<li>idempotent</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>$ <span class="ex">nix-shell</span> --packages jdk </span></code></pre></div>
+</div><div class="column" style="width:50%;">
+<p><strong>Nix Language</strong></p>
+<ul>
+<li>Declarative</li>
+<li>Functional</li>
+<li>No mutation</li>
+<li>No side-effects</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="ex">mkDerivation</span> {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>  <span class="ex">name</span> = <span class="st">&quot;myProject-1.0.0&quot;</span><span class="kw">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>  <span class="ex">src</span> = ./src<span class="kw">;</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>  <span class="ex">buildInputs</span> = [ maven jdk ]<span class="kw">;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>}</span></code></pre></div>
+</div>
+</div>
+<aside class="notes">
+<p>manager installable on windows, mac, linux several copies of app in different versions deployable like Ansible, Terraform about as many packages as Arch Linux AUR</p>
+<p>Nix lang = Json + functions reproducible development environments =&gt;faster onboarding switching between projects is easy, effortless, fast containerizsable into docker</p>
+</aside>
+</section>
+<section id="nix-language" class="slide level2">
+<h2>Nix Language</h2>
+<p><img data-src="img/xkcd-standards.png" style="width:60.0%" /></p>
+<p><small style="font-size: 9pt"> By https://xkcd.com/927/ CC BY-NC 2.5 </small></p>
+</section>
+<section id="nix-language-1" class="slide level2">
+<h2>Nix Language</h2>
+<p><strong>Pure, Functional, Lazy</strong></p>
+<ul>
+<li><p>Strings <code class="sourceCode bash"><span class="st">&quot;hello&quot;</span></code></p></li>
+<li><p>Numbers <code class="sourceCode bash"><span class="ex">42</span></code></p></li>
+<li><p>List <code class="sourceCode bash">[<span class="ex">1</span> 2 3]</code></p></li>
+<li><p>Expressions <code class="sourceCode bash"><span class="ex">1+2+3</span></code></p></li>
+<li><p>Attribute Sets <code class="sourceCode bash"><span class="kw">{</span> <span class="kw">}</span></code></p></li>
+<li><p>Functions <code class="sourceCode bash"><span class="ex">f</span> x</code></p></li>
+</ul>
+<aside class="notes">
+<p>pure = no side effects, no variables = declarative functional = first-class support lazy = expression is not evaluated until value is needed * Let-Expressions * Pattern-Matching not-general purpose language dynamically types = no type signatures/compile time</p>
+</aside>
+</section>
+<section id="attribute-set" class="slide level2">
+<h2>Attribute Set</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>  <span class="ex">name</span> = <span class="st">&quot;myProject-1.0.0&quot;</span><span class="kw">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>  <span class="ex">src</span> = ./src<span class="kw">;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>  <span class="ex">buildInputs</span> = [ maven jdk ]<span class="kw">;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="kw">}</span></span></code></pre></div>
+<p>Assignment:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="ex">three</span> = 3<span class="kw">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="ex">myDerivation</span> = { name = <span class="st">&quot;myProject-1.0.0&quot;</span><span class="kw">;</span> <span class="ex">src</span> = ... }</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="ex">myName</span> = myDerivation.name<span class="kw">;</span></span></code></pre></div>
+<aside class="notes">
+<p>adhoc variable declaration think like const myDerivation</p>
+</aside>
+</section>
+<section id="functions" class="slide level2">
+<h2>Functions</h2>
+<p><strong>Math</strong></p>
+<pre><code>f : ℝ -&gt; ℝ
+f(x) = 2x</code></pre>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Typescript</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>const f <span class="op">=</span> x <span class="kw">=&gt;</span> 2x</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="fu">f</span>(<span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>const g <span class="op">=</span> (x<span class="op">,</span>y) <span class="kw">=&gt;</span> x<span class="op">+</span>y</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="fu">g</span>(<span class="dv">3</span><span class="op">,</span><span class="dv">4</span>)</span></code></pre></div>
+</div><div class="column" style="width:50%;">
+<p><strong>Nix</strong></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="ex">f</span> = x: 2*x</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="ex">f</span> 3</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="ex">g</span> = x: y: x+y</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="ex">g</span> 3 4</span></code></pre></div>
+</div>
+</div>
+</section>
+<section id="functions-2" class="slide level2">
+<h2>Functions-2</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="ex">mkDerivation</span> {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>  <span class="ex">name</span> = <span class="st">&quot;myProject-1.0.0&quot;</span><span class="kw">;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>  <span class="ex">src</span> = ./src<span class="kw">;</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>  <span class="ex">..</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>}</span></code></pre></div>
+<p><strong>Resulting Derivation</strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>  <span class="st">&quot;/nix/store/dvmig8jgrdapvbyxb1rprckdmdqx08kv-myProject-1.0.0.drv&quot;</span>: <span class="kw">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>    <span class="st">&quot;outputs&quot;</span>: <span class="kw">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>      <span class="st">&quot;out&quot;</span>: <span class="kw">{</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>        <span class="st">&quot;path&quot;</span>: <span class="st">&quot;/nix/store/w9yy7v61ipb5rx6i35zq1mvc2iqfmps1-myProject-1.0.0&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a>      <span class="kw">}</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true"></a>    <span class="kw">}</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true"></a>    <span class="st">&quot;inputSrcs&quot;</span>:<span class="bu"> [</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true"></a>      <span class="st">&quot;/nix/store/9krlzvny65gdc8s7kpb6lkx8cd02c25b-default-builder.sh&quot;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true"></a>    ],</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true"></a>    <span class="st">&quot;inputDrvs&quot;</span>: {</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true"></a>      <span class="st">&quot;/nix/store/1psqjc0l1vmjsjy4ha5ywbv1l0993cka-bash-4.4-p23.drv&quot;</span>: [</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true"></a>        <span class="st">&quot;out&quot;</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true"></a>      ],</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true"></a>      <span class="st">&quot;/nix/store/8fbvqyxl9y0savd7lsrfbq9d8qpfbh7b-myProject-1.0.0.tar.gz.drv&quot;</span>: [</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true"></a>        <span class="st">&quot;out&quot;</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true"></a>      ],</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true"></a>      <span class="st">&quot;/nix/store/m15naxf285zafnsnlzfaxy0r10dzlanx-stdenv-linux.drv&quot;</span>: [</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true"></a>        <span class="st">&quot;out&quot;</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true"></a>      ]</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true"></a>    },</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true"></a>    <span class="st">&quot;platform&quot;</span>: <span class="st">&quot;x86_64-linux&quot;</span>,</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true"></a>    <span class="st">&quot;builder&quot;</span>: <span class="st">&quot;/nix/store/2jysm3dfsgby5sw5jgj43qjrb5v79ms9-bash-4.4-p23/bin/bash&quot;</span>,</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true"></a>    <span class="st">&quot;args&quot;</span>: [</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true"></a>      <span class="st">&quot;-e&quot;</span>,</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true"></a>      <span class="st">&quot;/nix/store/9krlzvny65gdc8s7kpb6lkx8cd02c25b-default-builder.sh&quot;</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true"></a>    ],</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true"></a>    <span class="st">&quot;env&quot;</span>: {</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true"></a>      <span class="st">&quot;buildInputs&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true"></a>      <span class="st">&quot;builder&quot;</span>: <span class="st">&quot;/nix/store/2jysm3dfsgby5sw5jgj43qjrb5v79ms9-bash-4.4-p23/bin/bash&quot;</span>,</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true"></a>      <span class="st">&quot;configureFlags&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true"></a>      <span class="st">&quot;depsBuildBuild&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true"></a>      <span class="st">&quot;depsBuildBuildPropagated&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true"></a>      <span class="st">&quot;depsBuildTarget&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true"></a>      <span class="st">&quot;depsBuildTargetPropagated&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true"></a>      <span class="st">&quot;depsHostHost&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true"></a>      <span class="st">&quot;depsHostHostPropagated&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true"></a>      <span class="st">&quot;depsTargetTarget&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true"></a>      <span class="st">&quot;depsTargetTargetPropagated&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true"></a>      <span class="st">&quot;doCheck&quot;</span>: <span class="st">&quot;1&quot;</span>,</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true"></a>      <span class="st">&quot;doInstallCheck&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true"></a>      <span class="st">&quot;name&quot;</span>: <span class="st">&quot;myProject-1.0.0&quot;</span>,</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true"></a>      <span class="st">&quot;nativeBuildInputs&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true"></a>      <span class="st">&quot;out&quot;</span>: <span class="st">&quot;/nix/store/w9yy7v61ipb5rx6i35zq1mvc2iqfmps1-myProject-1.0.0&quot;</span>,</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true"></a>      <span class="st">&quot;outputs&quot;</span>: <span class="st">&quot;out&quot;</span>,</span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true"></a>      <span class="st">&quot;patches&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true"></a>      <span class="st">&quot;pname&quot;</span>: <span class="st">&quot;myProject&quot;</span>,</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true"></a>      <span class="st">&quot;propagatedBuildInputs&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true"></a>      <span class="st">&quot;propagatedNativeBuildInputs&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true"></a>      <span class="st">&quot;src&quot;</span>: <span class="st">&quot;/nix/store/3x7dwzq014bblazs7kq20p9hyzz0qh8g-myProject-1.0.0.tar.gz&quot;</span>,</span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true"></a>      <span class="st">&quot;stdenv&quot;</span>: <span class="st">&quot;/nix/store/333six1faw9bhccsx9qw5718k6b1wiq2-stdenv-linux&quot;</span>,</span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true"></a>      <span class="st">&quot;strictDeps&quot;</span>: <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true"></a>      <span class="st">&quot;system&quot;</span>: <span class="st">&quot;x86_64-linux&quot;</span>,</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true"></a>      <span class="st">&quot;version&quot;</span>: <span class="st">&quot;1.0.0&quot;</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true"></a>    }</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true"></a>  }</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true"></a>}</span></code></pre></div>
+<aside class="notes">
+<p>nix show-derivation nixpkgs.hello functions allow shorter code (code reuse) and strong customization</p>
+</aside>
+</section>
+<section id="derivations" class="slide level2">
+<h2>Derivations</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="bu">let</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a> <span class="ex">pkgs</span> = import <span class="op">&lt;</span>nixpkgs<span class="op">&gt;</span> {}; </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="kw">in</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="ex">pkgs.stdenv.mkDerivation</span> {</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>  <span class="ex">name</span> = <span class="st">&quot;myProject-1.0.0&quot;</span><span class="kw">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>  <span class="ex">src</span> = ./src<span class="kw">;</span> </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>  <span class="ex">buildInputs</span> = [ pkgs.maven pkgs.jdk ]<span class="kw">;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>  <span class="ex">buildPhase</span> = <span class="st">&quot;maven clean build&quot;</span><span class="kw">;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a>}</span></code></pre></div>
+<aside class="notes">
+
+</aside>
+</section>
+<section id="nixpkgs" class="slide level2">
+<h2>Nixpkgs</h2>
+<p><code class="sourceCode bash"><span class="kw">(</span><span class="ex">import</span> <span class="op">&lt;</span>nixpkgs<span class="op">&gt;</span> {}<span class="kw">)</span></code> evaluates to:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>  <span class="ex">stdenv</span> = { .. <span class="kw">}</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>  <span class="ex">maven</span> = stdenv.mkDerivation {... jdk ...}</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>  <span class="ex">jdk</span> = ..</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>  <span class="ex">jdk11</span> = ..</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>  <span class="fu">git</span> = ....</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a>  <span class="ex">firefox</span> = ...</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true"></a>}</span></code></pre></div>
+<p><small style="font-size: 9pt"> https://github.com/NixOS/nixpkgs </small></p>
+<aside class="notes">
+<p>huge package set ca 1.5GB quite fast because lazy and mkDerivation functions aren’t called if not used</p>
+</aside>
+</section>
+<section id="demo" class="slide level2">
+<h2>Demo</h2>
+<aside class="notes">
+<p>demo switching between two environments docker https://nixos.org/guides/building-and-running-docker-images.html</p>
+</aside>
+</section>
+<section id="nix-package-manager" class="slide level2">
+<h2>Nix Package Manager</h2>
+<p><strong>Store</strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="ex">/nix/store/9234jfkdfj23j45r2102jfd-maven-2.0.0</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="ex">/nix/store/34234sdfjskdfj32j4kjdsf-maven-3.0.0</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="ex">/nix/store/sdf34dfkjlkj09u123123ss-maven-3.0.0</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="ex">..</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="ex">/nix/store/fsdkf234jdfdsfjkj0111df-jdk-1.8.0</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a><span class="ex">..</span></span></code></pre></div>
+</section>
+<section id="nixos-1" class="slide level2">
+<h2>NixOS</h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="kw">{</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>  <span class="ex">..</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>  <span class="ex">boot.loader.grub.device</span> = <span class="st">&quot;/dev/sda&quot;</span><span class="kw">;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>  <span class="ex">boot.kernelPackages</span> = pkgs.linuxPackages_latest<span class="kw">;</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a>  <span class="ex">..</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a>  </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true"></a>  <span class="ex">users.users.mneuss</span> = {</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true"></a>    <span class="ex">isNormalUser</span> = true<span class="kw">;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true"></a>    <span class="ex">home</span> = <span class="st">&quot;/home/mneuss&quot;</span><span class="kw">;</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true"></a>    <span class="ex">extraGroups</span> = [ </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true"></a>      <span class="st">&quot;wheel&quot;</span> # <span class="ex">Enable</span> ‘sudo’ for the user.</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true"></a>      <span class="st">&quot;docker&quot;</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true"></a>      <span class="st">&quot;network-manager&quot;</span> ]; </span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true"></a>  <span class="kw">}</span>;</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true"></a>  <span class="co"># install packages</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true"></a>  <span class="ex">environment.systemPackages</span> = with pkgs<span class="kw">;</span><span class="bu"> [</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true"></a>    jetbrains.idea-ultimate</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true"></a>    vscode</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true"></a>    git</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true"></a>    maven</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true"></a>    jdk11</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true"></a>  ];</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true"></a>  programs.bash.enableCompletion <span class="ot">=</span> true;</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true"></a>  </span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true"></a>  sound.enable <span class="ot">=</span> true;</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true"></a></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true"></a>  <span class="co"># Desktop</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true"></a>  services.xserver.enable <span class="ot">=</span> true; </span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true"></a>  services.xserver.layout <span class="ot">=</span> <span class="st">&quot;us&quot;</span>; </span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true"></a>  services.xserver.displayManager.gdm.enable <span class="ot">=</span> true;</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true"></a>  services.xserver.desktopManager.gnome3.enable <span class="ot">=</span> true;</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true"></a></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true"></a>  <span class="co"># Network</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true"></a>  networking.firewall.allowedTCPPorts <span class="ot">=</span> [ 80<span class="bu"> ]</span>;</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true"></a>  <span class="ex">networking.firewall.firewall.enable</span> = true<span class="kw">;</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true"></a>  <span class="ex">networking.hostName</span> = <span class="st">&quot;laptop&quot;</span><span class="kw">;</span> </span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true"></a>  <span class="ex">networking.networkmanager.enable</span> = true<span class="kw">;</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true"></a></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true"></a></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true"></a>  <span class="ex">system.stateVersion</span> = <span class="st">&quot;20.09&quot;</span><span class="kw">;</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true"></a>}</span></code></pre></div>
+<pre><code>nixos-rebuild switch</code></pre>
+<aside class="notes">
+<p><strong>Declarative Linux operating system</strong> atomic new generation installation atomic rollback</p>
+</aside>
+</section>
+<section id="further-study" class="slide level2">
+<h2>Further Study</h2>
+<ul>
+<li>Main Page: https://nixos.org/</li>
+<li>Switch Dev Environments: https://direnv.net/</li>
+<li>My Blog: https://lambdablob.com/</li>
+<li>Cloud Deployment: https://github.com/NixOS/nixops</li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="./reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="./reveal.js/plugin/notes/notes.js"></script>
+  <script src="./reveal.js/plugin/search/search.js"></script>
+  <script src="./reveal.js/plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
