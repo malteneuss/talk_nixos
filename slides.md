@@ -145,7 +145,7 @@ g 3 4
 :::
 ::::::::::::::
 
-## Functions-2
+## Functions
 ```nix
 mkDerivation {
   name = "myProject-1.0.0";
@@ -222,6 +222,7 @@ functions allow shorter code (code reuse) and strong customization
 
 ## Derivations
 ```nix
+# shell.nix
 let 
  pkgs = import <nixpkgs> {}; 
 in
@@ -231,6 +232,11 @@ pkgs.stdenv.mkDerivation {
   buildInputs = [ pkgs.maven pkgs.jdk ];
   buildPhase = "maven clean build";
 }
+```
+
+```nix
+$ nix-build shell.nix
+$ nix-shell shell.nix
 ```
 
 ::: notes
@@ -342,8 +348,18 @@ atomic rollback
 
 ## Further Study
 
-* Main Page: https://nixos.org/
-* Switch Dev Environments: https://direnv.net/
-* My Blog: https://lambdablob.com/
-* Cloud Deployment: https://github.com/NixOS/nixops
+![](img/nix-logo.svg){ width=10% }
+
+:::::::::::::: columns
+::: {.column width="50%"}
+* **Main Page** https://nixos.org/
+* **Cloud Deployment** https://github.com/NixOS/nixops
+:::
+::: {.column width="50%"}
+
+* **My Blog** https://lambdablob.com/
+* **Switch Dev Environments** https://direnv.net/
+
+:::
+::::::::::::::
 

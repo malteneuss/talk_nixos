@@ -193,8 +193,8 @@ f(x) = 2x</code></pre>
 </div>
 </div>
 </section>
-<section id="functions-2" class="slide level2">
-<h2>Functions-2</h2>
+<section id="functions-1" class="slide level2">
+<h2>Functions</h2>
 <div class="sourceCode" id="cb10"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="ex">mkDerivation</span> {</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>  <span class="ex">name</span> = <span class="st">&quot;myProject-1.0.0&quot;</span><span class="kw">;</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>  <span class="ex">src</span> = ./src<span class="kw">;</span> </span>
@@ -264,15 +264,18 @@ f(x) = 2x</code></pre>
 </section>
 <section id="derivations" class="slide level2">
 <h2>Derivations</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="bu">let</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a> <span class="ex">pkgs</span> = import <span class="op">&lt;</span>nixpkgs<span class="op">&gt;</span> {}; </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="kw">in</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="ex">pkgs.stdenv.mkDerivation</span> {</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>  <span class="ex">name</span> = <span class="st">&quot;myProject-1.0.0&quot;</span><span class="kw">;</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>  <span class="ex">src</span> = ./src<span class="kw">;</span> </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>  <span class="ex">buildInputs</span> = [ pkgs.maven pkgs.jdk ]<span class="kw">;</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>  <span class="ex">buildPhase</span> = <span class="st">&quot;maven clean build&quot;</span><span class="kw">;</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="co"># shell.nix</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="bu">let</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a> <span class="ex">pkgs</span> = import <span class="op">&lt;</span>nixpkgs<span class="op">&gt;</span> {}; </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="kw">in</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a><span class="ex">pkgs.stdenv.mkDerivation</span> {</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>  <span class="ex">name</span> = <span class="st">&quot;myProject-1.0.0&quot;</span><span class="kw">;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>  <span class="ex">src</span> = ./src<span class="kw">;</span> </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>  <span class="ex">buildInputs</span> = [ pkgs.maven pkgs.jdk ]<span class="kw">;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a>  <span class="ex">buildPhase</span> = <span class="st">&quot;maven clean build&quot;</span><span class="kw">;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>$ <span class="ex">nix-build</span> shell.nix</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>$ <span class="ex">nix-shell</span> shell.nix</span></code></pre></div>
 <aside class="notes">
 
 </aside>
@@ -280,18 +283,18 @@ f(x) = 2x</code></pre>
 <section id="nixpkgs" class="slide level2">
 <h2>Nixpkgs</h2>
 <p><code class="sourceCode bash"><span class="kw">(</span><span class="ex">import</span> <span class="op">&lt;</span>nixpkgs<span class="op">&gt;</span> {}<span class="kw">)</span></code> evaluates to:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">{</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>  <span class="ex">stdenv</span> = { .. <span class="kw">}</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>  <span class="ex">...</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>  <span class="ex">maven</span> = stdenv.mkDerivation {... jdk ...}</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>  <span class="ex">jdk</span> = ..</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>  <span class="ex">jdk11</span> = ..</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>  <span class="ex">...</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>  <span class="fu">git</span> = ....</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a>  <span class="ex">...</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a>  <span class="ex">firefox</span> = ...</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true"></a>  <span class="ex">...</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>  <span class="ex">stdenv</span> = { .. <span class="kw">}</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a>  <span class="ex">maven</span> = stdenv.mkDerivation {... jdk ...}</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>  <span class="ex">jdk</span> = ..</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>  <span class="ex">jdk11</span> = ..</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>  <span class="fu">git</span> = ....</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true"></a>  <span class="ex">firefox</span> = ...</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true"></a>}</span></code></pre></div>
 <p><small style="font-size: 9pt"> https://github.com/NixOS/nixpkgs </small></p>
 <aside class="notes">
 <p>huge package set ca 1.5GB quite fast because lazy and mkDerivation functions aren’t called if not used</p>
@@ -306,59 +309,59 @@ f(x) = 2x</code></pre>
 <section id="nix-package-manager" class="slide level2">
 <h2>Nix Package Manager</h2>
 <p><strong>Store</strong></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="ex">/nix/store/9234jfkdfj23j45r2102jfd-maven-2.0.0</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="ex">/nix/store/34234sdfjskdfj32j4kjdsf-maven-3.0.0</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="ex">/nix/store/sdf34dfkjlkj09u123123ss-maven-3.0.0</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="ex">..</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="ex">/nix/store/fsdkf234jdfdsfjkj0111df-jdk-1.8.0</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a><span class="ex">..</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="ex">/nix/store/9234jfkdfj23j45r2102jfd-maven-2.0.0</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="ex">/nix/store/34234sdfjskdfj32j4kjdsf-maven-3.0.0</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a><span class="ex">/nix/store/sdf34dfkjlkj09u123123ss-maven-3.0.0</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a><span class="ex">..</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a><span class="ex">/nix/store/fsdkf234jdfdsfjkj0111df-jdk-1.8.0</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a><span class="ex">..</span></span></code></pre></div>
 </section>
 <section id="nixos-1" class="slide level2">
 <h2>NixOS</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="kw">{</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>  <span class="ex">..</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>  <span class="ex">boot.loader.grub.device</span> = <span class="st">&quot;/dev/sda&quot;</span><span class="kw">;</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>  <span class="ex">boot.kernelPackages</span> = pkgs.linuxPackages_latest<span class="kw">;</span> </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a>  <span class="ex">..</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a>  </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true"></a>  <span class="ex">users.users.mneuss</span> = {</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true"></a>    <span class="ex">isNormalUser</span> = true<span class="kw">;</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true"></a>    <span class="ex">home</span> = <span class="st">&quot;/home/mneuss&quot;</span><span class="kw">;</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true"></a>    <span class="ex">extraGroups</span> = [ </span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true"></a>      <span class="st">&quot;wheel&quot;</span> # <span class="ex">Enable</span> ‘sudo’ for the user.</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true"></a>      <span class="st">&quot;docker&quot;</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true"></a>      <span class="st">&quot;network-manager&quot;</span> ]; </span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true"></a>  <span class="kw">}</span>;</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true"></a></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true"></a>  <span class="co"># install packages</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true"></a>  <span class="ex">environment.systemPackages</span> = with pkgs<span class="kw">;</span><span class="bu"> [</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true"></a>    jetbrains.idea-ultimate</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true"></a>    vscode</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true"></a>    git</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true"></a>    maven</span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true"></a>    jdk11</span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true"></a>  ];</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true"></a>  programs.bash.enableCompletion <span class="ot">=</span> true;</span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true"></a>  </span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true"></a>  sound.enable <span class="ot">=</span> true;</span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true"></a></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true"></a>  <span class="co"># Desktop</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true"></a>  services.xserver.enable <span class="ot">=</span> true; </span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true"></a>  services.xserver.layout <span class="ot">=</span> <span class="st">&quot;us&quot;</span>; </span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true"></a>  services.xserver.displayManager.gdm.enable <span class="ot">=</span> true;</span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true"></a>  services.xserver.desktopManager.gnome3.enable <span class="ot">=</span> true;</span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true"></a></span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true"></a>  <span class="co"># Network</span></span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true"></a>  networking.firewall.allowedTCPPorts <span class="ot">=</span> [ 80<span class="bu"> ]</span>;</span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true"></a>  <span class="ex">networking.firewall.firewall.enable</span> = true<span class="kw">;</span></span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true"></a>  <span class="ex">networking.hostName</span> = <span class="st">&quot;laptop&quot;</span><span class="kw">;</span> </span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true"></a>  <span class="ex">networking.networkmanager.enable</span> = true<span class="kw">;</span></span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true"></a></span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true"></a></span>
-<span id="cb15-42"><a href="#cb15-42" aria-hidden="true"></a>  <span class="ex">system.stateVersion</span> = <span class="st">&quot;20.09&quot;</span><span class="kw">;</span></span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true"></a>  <span class="ex">...</span></span>
-<span id="cb15-44"><a href="#cb15-44" aria-hidden="true"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode nix"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a><span class="kw">{</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>  <span class="ex">..</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>  <span class="ex">boot.loader.grub.device</span> = <span class="st">&quot;/dev/sda&quot;</span><span class="kw">;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a>  <span class="ex">boot.kernelPackages</span> = pkgs.linuxPackages_latest<span class="kw">;</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a>  <span class="ex">..</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>  </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true"></a>  <span class="ex">users.users.mneuss</span> = {</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true"></a>    <span class="ex">isNormalUser</span> = true<span class="kw">;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true"></a>    <span class="ex">home</span> = <span class="st">&quot;/home/mneuss&quot;</span><span class="kw">;</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true"></a>    <span class="ex">extraGroups</span> = [ </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true"></a>      <span class="st">&quot;wheel&quot;</span> # <span class="ex">Enable</span> ‘sudo’ for the user.</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true"></a>      <span class="st">&quot;docker&quot;</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true"></a>      <span class="st">&quot;network-manager&quot;</span> ]; </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true"></a>  <span class="kw">}</span>;</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true"></a>  <span class="co"># install packages</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true"></a>  <span class="ex">environment.systemPackages</span> = with pkgs<span class="kw">;</span><span class="bu"> [</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true"></a>    jetbrains.idea-ultimate</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true"></a>    vscode</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true"></a>    git</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true"></a>    maven</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true"></a>    jdk11</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true"></a>  ];</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true"></a>  programs.bash.enableCompletion <span class="ot">=</span> true;</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true"></a>  </span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true"></a>  sound.enable <span class="ot">=</span> true;</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true"></a></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true"></a>  <span class="co"># Desktop</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true"></a>  services.xserver.enable <span class="ot">=</span> true; </span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true"></a>  services.xserver.layout <span class="ot">=</span> <span class="st">&quot;us&quot;</span>; </span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true"></a>  services.xserver.displayManager.gdm.enable <span class="ot">=</span> true;</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true"></a>  services.xserver.desktopManager.gnome3.enable <span class="ot">=</span> true;</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true"></a></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true"></a>  <span class="co"># Network</span></span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true"></a>  networking.firewall.allowedTCPPorts <span class="ot">=</span> [ 80<span class="bu"> ]</span>;</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true"></a>  <span class="ex">networking.firewall.firewall.enable</span> = true<span class="kw">;</span></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true"></a>  <span class="ex">networking.hostName</span> = <span class="st">&quot;laptop&quot;</span><span class="kw">;</span> </span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true"></a>  <span class="ex">networking.networkmanager.enable</span> = true<span class="kw">;</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true"></a></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true"></a></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true"></a>  <span class="ex">system.stateVersion</span> = <span class="st">&quot;20.09&quot;</span><span class="kw">;</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true"></a>  <span class="ex">...</span></span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true"></a>}</span></code></pre></div>
 <pre><code>nixos-rebuild switch</code></pre>
 <aside class="notes">
 <p><strong>Declarative Linux operating system</strong> atomic new generation installation atomic rollback</p>
@@ -366,12 +369,20 @@ f(x) = 2x</code></pre>
 </section>
 <section id="further-study" class="slide level2">
 <h2>Further Study</h2>
+<p><img data-src="img/nix-logo.svg" style="width:10.0%" /></p>
+<div class="columns">
+<div class="column" style="width:50%;">
 <ul>
-<li>Main Page: https://nixos.org/</li>
-<li>Switch Dev Environments: https://direnv.net/</li>
-<li>My Blog: https://lambdablob.com/</li>
-<li>Cloud Deployment: https://github.com/NixOS/nixops</li>
+<li><strong>Main Page</strong> https://nixos.org/</li>
+<li><strong>Cloud Deployment</strong> https://github.com/NixOS/nixops</li>
 </ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><strong>My Blog</strong> https://lambdablob.com/</li>
+<li><strong>Switch Dev Environments</strong> https://direnv.net/</li>
+</ul>
+</div>
+</div>
 </section>
     </div>
   </div>
