@@ -66,9 +66,7 @@ Java, JS, Python, Rust, Haskell...
 ## Demo
 ::: notes
 Demo show nix shell 
-nix-shell --packages cowsay --run "cowsay hi"
-- jupyter notebook env
-nix-shell --packages 'python3.withPackages(ps: with ps; [ numpy scipy matplotlib notebook scikitlearn scipy nltk spacy])'
+nix run nixpkgs#cowsay Hi
 - Find Nix Store Path of app
 readlink -f $(which java)
 :::
@@ -94,7 +92,7 @@ readlink -f $(which java)
 
 ## Nix Language
 :::::::::::::: columns
-::: {.column width="50%"}
+::: {.column width="70%"}
 
 **≈Json + Functions**
 
@@ -106,7 +104,7 @@ mkDerivation {
 }
 ```
 :::
-::: {.column width="50%"}
+::: {.column width="30%"}
 **Benefits**
 
 * Functional
@@ -170,8 +168,8 @@ Factor out common expression:
 
 ```nix
 {
-  name        = otherAttrSet.a.b.c.d;
-  src         = otherAttrSet.a.b.c.e; 
+  name = otherAttrSet.a.b.c;
+  src  = otherAttrSet.a.b.d; 
   ...
 }
 ```
@@ -180,11 +178,11 @@ Factor out common expression:
 ::: {.column width="50%"}
 
 ```nix
-let common = otherAttrSet.a.b.c;
+let common = otherAttrSet.a.b;
 in
   {
-    name        = common.d;
-    src         = common.e; 
+    name = common.c;
+    src  = common.d; 
     ...
   }
 ```
