@@ -12,9 +12,6 @@ title: NixOS
 By Tim Cuthbertson CC BY 4.0, https://nixos.org
 </small>
 
-::: notes
-used by Mozilla for Firefox, Target, Atlassian for Marketplace, Klarna
-:::
 
 ## Content 
 :::::::::::::: columns
@@ -25,9 +22,9 @@ used by Mozilla for Firefox, Target, Atlassian for Marketplace, Klarna
 ::: {.column width="50%"}
 **Nix**
 
+* OS
 * Package Manager
 * Language
-* OS
 :::
 ::::::::::::::
 
@@ -48,14 +45,14 @@ containerizsable into docker
 
 * Adhoc environments
   ```nix
-  $ nix-shell --packages jdk
+  $ nix shell nixpkgs#python311 nixpkgs#poetry
   ```
 * Reproducible environments
   ```nix
   mkDerivation {
     name = "myProject-1.0.0";
     src = ./src; 
-    buildInputs = [ maven jdk ...];
+    buildInputs = [ python311 poetry ...];
   }
   ```
 
@@ -77,23 +74,10 @@ readlink -f $(which java)
 :::
 
 ## Nix Language
-![](img/xkcd-standards.png){ width=60% }
-
-<small style="font-size: 9pt">
-By https://xkcd.com/927/ CC BY-NC 2.5
-</small>
-
-
-## Nix Language
 **Derivation**
 ```nix
 {
   "/nix/store/dvmidxj5...-myProject-1.0.0.drv": {
-    "outputs": {
-      "out": {
-        "path": "/nix/store/w9yy7v...-myProject-1.0.0"
-      }
-    },
     "inputSrcs": [
       "/nix/store/9krlzvn...-default-builder.sh"
     ],
@@ -105,79 +89,43 @@ By https://xkcd.com/927/ CC BY-NC 2.5
         "out"
       ],
       "/nix/store/m15naxf2...-stdenv-linux.drv": [
-        "out"
-      ]
-    },
-    "platform": "x86_64-linux",
-    "builder": "/nix/store/2jysm...-bash-4.4-p23/bin/bash",
-    "args": [
-      "-e",
-      "/nix/store/9krlzvny65g...-default-builder.sh"
-    ],
-    "env": {
-      "buildInputs": "",
-      "builder": "/nix/store/2jysm...-bash-4.4-p23/bin/bash",
-      "configureFlags": "",
-      "depsBuildBuild": "",
-      "depsBuildBuildPropagated": "",
-      "depsBuildTarget": "",
-      "depsBuildTargetPropagated": "",
-      "depsHostHost": "",
-      "depsHostHostPropagated": "",
-      "depsTargetTarget": "",
-      "depsTargetTargetPropagated": "",
-      "doCheck": "1",
-      "doInstallCheck": "",
-      "name": "myProject-1.0.0",
-      "nativeBuildInputs": "",
-      "out": "/nix/store/w9yy7v6...-myProject-1.0.0",
-      "outputs": "out",
-      "patches": "",
-      "pname": "myProject",
-      "propagatedBuildInputs": "",
-      "propagatedNativeBuildInputs": "",
-      "src": "/nix/store/3x7dwzq01...-myProject-1.0.0.tar.gz",
-      "stdenv": "/nix/store/333six1f...-stdenv-linux",
-      "strictDeps": "",
-      "system": "x86_64-linux",
-      "version": "1.0.0"
-    }
-  }
-}
+      ...
 ```
 
 ## Nix Language
 :::::::::::::: columns
 ::: {.column width="50%"}
+
 **≈Json + Functions**
+
 ```nix
 mkDerivation {
   name = "myProject-1.0.0";
   src = ./src; 
-  buildInputs = [ maven jdk ];
+  buildInputs = [ python311 poetry ...];
 }
 ```
 :::
 ::: {.column width="50%"}
 **Benefits**
 
-* Declarative
 * Functional
-* Pure
+* Pure (almost)
+* Declarative
 
 
 :::
 ::::::::::::::
 
 ## Nix Language
-**Pure, Functional, Lazy**
 
-* Strings `"hello"`{.nix}
 * Numbers `42`{.nix}
+* Strings `"hello"`{.nix}
 * List    `[1 2 3]`{.nix}
 * Expressions `1+2+3`{.nix}
 
-* Attribute Sets `{ }`{.nix}
+* Attribute Sets `{ key = value; ... }`{.nix}
+* Let Bindings `let x = ... in ...`{.nix}
 * Functions `f x`{.nix}
 
 ::: notes
@@ -193,23 +141,59 @@ dynamically types = no type signatures/compile time
 ## Attribute Set
 ```nix
 {
-  name = "myProject-1.0.0";
-  src = ./src; 
-  buildInputs = [ maven jdk ];
+  name        = "myProject-1.0.0";
+  src         = ./src; 
+  buildInputs = [ python311 poetry ...];
   ...
 }
 ```
-Assignment:
+
 ```nix
-myNumber   = 3;
-myAttrSet  = { name = "myProject-1.0.0"; src = ... }
-myString   = myAttrSet.name;
-myFunction = x: 2*x;
+{
+  myNumber   = 3;
+  myAttrSet  = { name = "myProject-1.0.0"; src = ... };
+  myString   = otherAttrSet.nestedSet.name;
+  myFunction = x: 2*x;
+}
 ```
 
 ::: notes
 adhoc variable declaration
 think like const myDerivation
+:::
+
+## Let-Binding
+Factor out common expression:
+
+:::::::::::::: columns
+::: {.column width="50%"}
+
+```nix
+{
+  name        = otherAttrSet.a.b.c.d;
+  src         = otherAttrSet.a.b.c.e; 
+  ...
+}
+```
+
+:::
+::: {.column width="50%"}
+
+```nix
+let common = otherAttrSet.a.b.c;
+in
+  {
+    name        = common.d;
+    src         = common.e; 
+    ...
+  }
+```
+
+:::
+::::::::::::::
+
+::: notes
+Plain assignment is not an expression, so not supported on its own, just as let...
 :::
 
 ## Functions
@@ -271,110 +255,62 @@ g: (x,y) ↦ x+y                    g: x ↦ (y ↦ x+y)
 **Usage**
 ```
 g (3,4)                           g 3 4
+                                ((g 3) 4)
 ```
 
 ## Functions
 ```nix
+# Definition
+mkDerivation = overrideAttrs: ...
+
+# Usage
 mkDerivation {
   name = "myProject-1.0.0";
   src = ./src; 
-  ..
 }
 ```
 
 **Resulting Derivation**
 ```nix
 {
-  "/nix/store/dvmig8jgrdapvbyxb1rprckdmdqx08kv-myProject-1.0.0.drv": {
-    "outputs": {
-      "out": {
-        "path": "/nix/store/w9yy7v61ipb5rx6i35zq1mvc2iqfmps1-myProject-1.0.0"
-      }
-    },
+  "/nix/store/dvmidxj5...-myProject-1.0.0.drv": {
     "inputSrcs": [
-      "/nix/store/9krlzvny65gdc8s7kpb6lkx8cd02c25b-default-builder.sh"
+      "/nix/store/9krlzvn...-default-builder.sh"
     ],
-    "inputDrvs": {
-      "/nix/store/1psqjc0l1vmjsjy4ha5ywbv1l0993cka-bash-4.4-p23.drv": [
-        "out"
-      ],
-      "/nix/store/8fbvqyxl9y0savd7lsrfbq9d8qpfbh7b-myProject-1.0.0.tar.gz.drv": [
-        "out"
-      ],
-      "/nix/store/m15naxf285zafnsnlzfaxy0r10dzlanx-stdenv-linux.drv": [
-        "out"
-      ]
-    },
-    "platform": "x86_64-linux",
-    "builder": "/nix/store/2jysm3dfsgby5sw5jgj43qjrb5v79ms9-bash-4.4-p23/bin/bash",
-    "args": [
-      "-e",
-      "/nix/store/9krlzvny65gdc8s7kpb6lkx8cd02c25b-default-builder.sh"
-    ],
-    "env": {
-      "buildInputs": "",
-      "builder": "/nix/store/2jysm3dfsgby5sw5jgj43qjrb5v79ms9-bash-4.4-p23/bin/bash",
-      "configureFlags": "",
-      "depsBuildBuild": "",
-      "depsBuildBuildPropagated": "",
-      "depsBuildTarget": "",
-      "depsBuildTargetPropagated": "",
-      "depsHostHost": "",
-      "depsHostHostPropagated": "",
-      "depsTargetTarget": "",
-      "depsTargetTargetPropagated": "",
-      "doCheck": "1",
-      "doInstallCheck": "",
-      "name": "myProject-1.0.0",
-      "nativeBuildInputs": "",
-      "out": "/nix/store/w9yy7v61ipb5rx6i35zq1mvc2iqfmps1-myProject-1.0.0",
-      "outputs": "out",
-      "patches": "",
-      "pname": "myProject",
-      "propagatedBuildInputs": "",
-      "propagatedNativeBuildInputs": "",
-      "src": "/nix/store/3x7dwzq014bblazs7kq20p9hyzz0qh8g-myProject-1.0.0.tar.gz",
-      "stdenv": "/nix/store/333six1faw9bhccsx9qw5718k6b1wiq2-stdenv-linux",
-      "strictDeps": "",
-      "system": "x86_64-linux",
-      "version": "1.0.0"
-    }
-  }
-}
+    ...
 ```
 
 ::: notes
-nix show-derivation nixpkgs.hello
+nix derivation show nixpkgs#hello
 functions allow shorter code (code reuse) and strong customization
 :::
 
 ## Derivation
 ```nix
-# shell.nix
 let 
- pkgs = import <nixpkgs> {}; 
+ pkgs = ...
 in
 pkgs.stdenv.mkDerivation {
   name = "myProject-1.0.0";
   src = ./src; 
-  buildInputs = [ pkgs.maven pkgs.jdk ];
-  buildPhase = "maven clean build";
+  buildInputs = [ pkgs.python311 pkgs.poetry ];
+  buildPhase = "poetry build";
 }
 ```
-
 
 ::: notes
 :::
 
 ## Nixpkgs
-`(import <nixpkgs> {})`{.nix} evaluates to:
+Just a huge attribute set:
 ```nix
+# pkgs =
 {
-  stdenv = { .. }
+  stdenv = { mkDerivation = .. ; ... }
   ...
-  maven = stdenv.mkDerivation {... jdk ...}
-  jdk = ..
-  jdk11 = ..
+  poetry = stdenv.mkDerivation {... python311 ...}
+  python39 = ..
+  python311 = ..
   ...
   git = ....
   ...
@@ -401,19 +337,19 @@ https://search.nixos.org
 
 ## Reproducible Builds
 ```nix
-$ nix-build shell.nix   # build artifact, put into store
+$ nix build <derivation> # build artifact, put into store
 ```
 **Store**
 ```bash
 /nix/store/9234jfkdfj23j45r2102jfd-myProject-1.0.0
-/nix/store/34234sdfjskdfj32j4kjdsf-maven-3.0.0
-/nix/store/sdf34dfkjlkj09u123123ss-maven-3.0.0
+/nix/store/34234sdfjskdfj32j4kjdsf-python311-3.11.0
 ..
-/nix/store/fsdkf234jdfdsfjkj0111df-jdk-1.8.0
+/nix/store/fsdkf234jdfdsfjkj0111df-poetry-1.6.1
+/nix/store/sdf34dfkjlkj09u123123ss-poetry-1.6.1
 ..
 ```
 ```nix
-$ nix-shell shell.nix    # load environment with buildInputs
+$ nix develop flake.nix    # load environment with buildInputs
 ```
 
 ## Demo
@@ -428,52 +364,22 @@ docker https://nixos.org/guides/building-and-running-docker-images.html
 ```nix
 
 {
-  ..
-  boot.loader.grub.device = "/dev/sda";
-  boot.kernelPackages = pkgs.linuxPackages_latest; 
-  ..
-  
-  users.users.mneuss = {
-    isNormalUser = true;
-    home = "/home/mneuss";
-    extraGroups = [ 
-      "wheel" # Enable ‘sudo’ for the user.
-      "docker"
-      "network-manager" ]; 
-  };
+  boot.kernelPackages = pkgs.linuxPackages_6_5; 
+  users.users.mneuss = { home = "/home/mneuss"; ...};
 
-  # install packages
   environment.systemPackages = with pkgs; [
     jetbrains.idea-ultimate
-    vscode
-    git
-    maven
-    jdk11
+    python311
   ];
-  programs.bash.enableCompletion = true;
-  
-  sound.enable = true;
 
-  # Desktop
-  services.xserver.enable = true; 
-  services.xserver.layout = "us"; 
-  services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome3.enable = true;
-
-  # Network
   networking.firewall.allowedTCPPorts = [ 80 ];
-  networking.firewall.firewall.enable = true;
-  networking.hostName = "laptop"; 
-  networking.networkmanager.enable = true;
-
-
-  system.stateVersion = "20.09";
   ...
 }
 ```
 
 ```
-nixos-rebuild switch
+nixos-rebuild switch ...
 ```
 
 ::: notes
@@ -489,7 +395,7 @@ atomic rollback
 :::::::::::::: columns
 ::: {.column width="50%"}
 * **Main Page** https://nixos.org/
-* **Cloud Deployment** https://github.com/NixOS/nixops
+* **Nix packages** https://github.com/NixOS/nixpkgs
 :::
 ::: {.column width="50%"}
 
@@ -499,3 +405,7 @@ atomic rollback
 :::
 ::::::::::::::
 
+
+::: notes
+used by Mozilla for Firefox, Target, Atlassian for Marketplace, Klarna
+:::
