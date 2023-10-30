@@ -4,7 +4,7 @@ title: NixOS
 ---
 
 ## NixOS 
-> "Reproducible builds and deployments."
+> "... reproducible, declarative and reliable systems."
 
 ![](img/nix-logo.svg){ width=40% }
 
@@ -22,9 +22,10 @@ By Tim Cuthbertson CC BY 4.0, https://nixos.org
 ::: {.column width="50%"}
 **Nix**
 
-* OS
-* Package Manager
 * Language
+* Package Manager
+* OS
+
 :::
 ::::::::::::::
 
@@ -41,19 +42,21 @@ switching between projects is easy, effortless, fast
 containerizsable into docker
 :::
 
-## Nix Package Manager
+## Use Cases
 
-* Adhoc environments
-  ```nix
-  $ nix shell nixpkgs#python311 nixpkgs#poetry
-  ```
-* Reproducible environments
+* Reproducible artifacts (apps, environments ...)
   ```nix
   mkDerivation {
     name = "myProject-1.0.0";
     src = ./src; 
     buildInputs = [ python311 poetry ...];
   }
+  ```
+
+* Adhoc environments
+  ```nix
+  $ nix shell nixpkgs#poetry nixpkgs#python311 
+  $ nix run   nixpkgs#poetry
   ```
 
 ::: notes
@@ -63,12 +66,14 @@ Java, JS, Python, Rust, Haskell...
 * reproducible
 :::
 
-## Demo
 ::: notes
+
+Demo
 Demo show nix shell 
 nix run nixpkgs#cowsay Hi
 - Find Nix Store Path of app
 readlink -f $(which java)
+
 :::
 
 ## Nix Language
@@ -139,6 +144,15 @@ dynamically types = no type signatures/compile time
 ## Attribute Set
 ```nix
 {
+  myNumber   = 3;
+  myAttrSet  = { name = "myProject-1.0.0"; src = ... };
+  myString   = otherAttrSet.nestedSet.name;
+  myFunction = x: 2*x;
+}
+```
+
+```nix
+{
   name        = "myProject-1.0.0";
   src         = ./src; 
   buildInputs = [ python311 poetry ...];
@@ -146,14 +160,6 @@ dynamically types = no type signatures/compile time
 }
 ```
 
-```nix
-{
-  myNumber   = 3;
-  myAttrSet  = { name = "myProject-1.0.0"; src = ... };
-  myString   = otherAttrSet.nestedSet.name;
-  myFunction = x: 2*x;
-}
-```
 
 ::: notes
 adhoc variable declaration
@@ -223,6 +229,18 @@ f: x ↦ 2x
 ```
 :::
 
+
+## Functions
+**Currying**
+```
+g: (ℝ,ℝ) ⟶ ℝ                      g: ℝ ⟶ (ℝ ⟶ ℝ)
+g: (x,y) ↦ x+y                    g: x ↦ (y ↦ x+y)
+```
+**Usage**
+```
+g(3,4)                            g(3)(4)
+```
+
 ## Functions
 :::::::::::::: columns
 ::: {.column width="50%"}
@@ -237,24 +255,13 @@ g(3,4)
 ::: {.column width="50%"}
 **Nix**
 ```nix
-g = x: y: x+y
-g 3 4
+  g = x: y: x+y   # definition
+  g 3 4           # usage
+((g 3) 4)
 ```
 
 :::
 ::::::::::::::
-
-## Functions
-**Currying**
-```
-g: (ℝ,ℝ) ⟶ ℝ                      g: ℝ ⟶ (ℝ ⟶ ℝ)
-g: (x,y) ↦ x+y                    g: x ↦ (y ↦ x+y)
-```
-**Usage**
-```
-g (3,4)                           g 3 4
-                                ((g 3) 4)
-```
 
 ## Functions
 ```nix
@@ -334,17 +341,18 @@ https://search.nixos.org
 
 
 ## Reproducible Builds
-```nix
-$ nix build <derivation> # build artifact, put into store
-```
 **Store**
 ```bash
+/nix/store/fdffffkdfj23j45r2102jfd-myProject-1.0.0.drv
 /nix/store/9234jfkdfj23j45r2102jfd-myProject-1.0.0
 /nix/store/34234sdfjskdfj32j4kjdsf-python311-3.11.0
 ..
 /nix/store/fsdkf234jdfdsfjkj0111df-poetry-1.6.1
 /nix/store/sdf34dfkjlkj09u123123ss-poetry-1.6.1
 ..
+```
+```nix
+$ nix build <derivation>   # build artifact, put into store
 ```
 ```nix
 $ nix develop flake.nix    # load environment with buildInputs
@@ -406,4 +414,5 @@ atomic rollback
 
 ::: notes
 used by Mozilla for Firefox, Target, Atlassian for Marketplace, Klarna
+EU commision
 :::
